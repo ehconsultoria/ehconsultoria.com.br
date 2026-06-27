@@ -1,0 +1,202 @@
+{
+  "header": {
+    "logoVisible": true,
+    "ctaText": "Fale com um Especialista",
+    "ctaLink": {
+      "type": "internal",
+      "value": "#contato"
+    },
+    "menuItems": [
+      { "id": "m1", "label": "Soluções", "anchor": "#solucoes" },
+      { "id": "m2", "label": "Diferenciais", "anchor": "#diferenciais" },
+      { "id": "m3", "label": "Sobre Nós", "anchor": "#sobre" },
+      { "id": "m4", "label": "Blog & Mídia", "anchor": "#blog" },
+      { "id": "m5", "label": "FAQ", "anchor": "#faq" }
+    ]
+  },
+  "hero": {
+    "visible": true,
+    "title": "Saúde Mental Corporativa: O Maior Ativo da Sua Empresa",
+    "subtitle": "Desenvolvemos programas de psicologia preventiva, treinamentos corporativos e consultoria estratégica para humanizar relações de trabalho e elevar o bem-estar organizacional.",
+    "ctaText": "Agendar Diagnóstico Gratuito",
+    "ctaLink": {
+      "type": "internal",
+      "value": "#contato"
+    },
+    "imageUrl": "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&q=80&w=1200"
+  },
+  "solutions": {
+    "visible": true,
+    "title": "Nossos Programas & Soluções",
+    "subtitle": "Metodologias validadas cientificamente para apoiar a sua equipe em cada etapa de desenvolvimento da saúde mental corporativa.",
+    "items": [
+      {
+        "id": "s1",
+        "title": "Treinamentos & Palestras",
+        "description": "Capacitação para líderes e colaboradores focada em comunicação não-violenta, inteligência emocional e manejo de estresse.",
+        "imageUrl": "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=800",
+        "ctaText": "Saber Mais",
+        "ctaLink": { "type": "internal", "value": "#contato" }
+      },
+      {
+        "id": "s2",
+        "title": "Psicoterapia Breve Corporativa",
+        "description": "Atendimento clínico preventivo e focalizado para colaboradores que necessitam de suporte emocional estratégico no dia a dia.",
+        "imageUrl": "https://images.unsplash.com/photo-1527689368864-3a821dbccc34?auto=format&fit=crop&q=80&w=800",
+        "ctaText": "Saber Mais",
+        "ctaLink": { "type": "internal", "value": "#contato" }
+      },
+      {
+        "id": "s3",
+        "title": "Diagnóstico de Clima Mental",
+        "description": "Análise aprofundada dos níveis de estresse, burnout e engajamento da equipe, gerando relatórios de risco psicossocial.",
+        "imageUrl": "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&q=80&w=800",
+        "ctaText": "Saber Mais",
+        "ctaLink": { "type": "internal", "value": "#contato" }
+      },
+      {
+        "id": "s4",
+        "title": "Consultoria em Saúde Mental",
+        "description": "Assessoria para o time de RH desenhar e implementar políticas robustas de bem-estar corporativo alinhadas às diretrizes ESG.",
+        "imageUrl": "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=800",
+        "ctaText": "Saber Mais",
+        "ctaLink": { "type": "internal", "value": "#contato" }
+      }
+    ]
+  },
+  "differentials": {
+    "visible": true,
+    "title": "Nossos Diferenciais",
+    "subtitle": "Por que escolher a EH Consultoria para guiar o bem-estar e a maturidade emocional na sua corporação?",
+    "items": [
+      {
+        "id": "d1",
+        "iconName": "Heart",
+        "title": "Acolhimento Humanizado",
+        "description": "Metodologia que equilibra a seriedade corporativa com o olhar individual sensível e acolhedor."
+      },
+      {
+        "id": "d2",
+        "iconName": "Shield",
+        "title": "Absoluto Sigilo e Ética",
+        "description": "Rigorosa conformidade com o código de ética da psicologia e proteção total aos dados sensíveis."
+      },
+      {
+        "id": "d3",
+        "iconName": "Award",
+        "title": "Foco Prático & Científico",
+        "description": "Práticas baseadas em evidências científicas que trazem impacto real na retenção de talentos e na produtividade."
+      },
+      {
+        "id": "d4",
+        "iconName": "TrendingUp",
+        "title": "Retorno Sobre Saúde (ROH)",
+        "description": "Redução mensurável do absenteísmo, presenteísmo e sinistralidade do plano de saúde empresarial."
+      }
+    ]
+  },
+  "achievements": {
+    "visible": true,
+    "title": "Nossos Resultados",
+    "subtitle": "Indicadores que consolidam o impacto e a confiança depositada por grandes corporações no nosso trabalho.",
+    "stats": [
+      { "id": "st1", "number": 15000, "suffix": "+", "label": "Vidas Impactadas" },
+      { "id": "st2", "number": 50, "suffix": "+", "label": "Empresas Parceiras" },
+      { "id": "st3", "number": 300, "suffix": "+", "label": "Treinamentos Realizados" },
+      { "id": "st4", "number": 98, "suffix": "%", "label": "Índice de Satisfação" }
+    ],
+    "partners": [
+      { "id": "pt1", "name": "SulAmérica", "logoText": "SULAMÉRICA" },
+      { "id": "pt2", "name": "Bradesco Saúde", "logoText": "BRADESCO" },
+      { "id": "pt3", "name": "Petrobras", "logoText": "PETROBRAS" },
+      { "id": "pt4", "name": "Votorantim", "logoText": "VOTORANTIM" },
+      { "id": "pt5", "name": "Natura", "logoText": "NATURA" }
+    ]
+  },
+  "about": {
+    "visible": true,
+    "title": "Sobre Nós",
+    "subtitle": "Humanizando ambientes de trabalho e transformando a cultura organizacional através da escuta clínica e empática.",
+    "content": "A EH Consultoria em Saúde Mental nasceu com o firme propósito de construir pontes entre a excelência corporativa e a integridade humana. Fundada por psicólogos especialistas no cenário organizacional, acreditamos que empresas de sucesso são reflexos diretos de indivíduos saudáveis. Atuamos sob medida com treinamentos, psicoterapia corporativa preventiva e diagnósticos institucionais que protegem a produtividade ao mesmo tempo que cultivam o respeito, a segurança psicológica e o bem-estar duradouro no trabalho.",
+    "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "imageUrl": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=800"
+  },
+  "blog": {
+    "visible": true,
+    "title": "Blog & Mídia",
+    "subtitle": "Acesse artigos informativos e materiais educativos preparados pela nossa equipe clínica para cultivar a saúde mental.",
+    "posts": [
+      {
+        "id": "p1",
+        "title": "Burnout no Trabalho: Como Identificar e Prevenir na Equipe",
+        "excerpt": "Entenda as causas do esgotamento profissional crônico e quais ações o time de liderança e RH devem tomar para atenuar riscos.",
+        "date": "2026-06-15",
+        "readTime": "5 min de leitura",
+        "imageUrl": "https://images.unsplash.com/photo-1541516173063-42eb657a72d8?auto=format&fit=crop&q=80&w=600",
+        "link": "#"
+      },
+      {
+        "id": "p2",
+        "title": "Segurança Psicologia: O Que É e Como Criar na Prática",
+        "excerpt": "Ambientes onde os colaboradores sentem-se livres para expressar opiniões e cometer falhas sem retaliação são 12% mais inovadores.",
+        "date": "2026-06-08",
+        "readTime": "7 min de leitura",
+        "imageUrl": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=600",
+        "link": "#"
+      },
+      {
+        "id": "p3",
+        "title": "A Importância da Liderança Compassiva no Século XXI",
+        "excerpt": "Como líderes capacitados a escutar de forma empática reduzem o absenteísmo médico da corporação de maneira sensível.",
+        "date": "2026-05-24",
+        "readTime": "4 min de leitura",
+        "imageUrl": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=600",
+        "link": "#"
+      }
+    ]
+  },
+  "faq": {
+    "visible": true,
+    "title": "Dúvidas Frequentes",
+    "subtitle": "Respostas rápidas para as principais questões sobre como funciona a consultoria institucional de saúde mental.",
+    "items": [
+      {
+        "id": "f1",
+        "question": "Como a EH Consultoria avalia a saúde mental de uma equipe?",
+        "answer": "Utilizamos ferramentas diagnósticas seguras e anônimas (como escalas validadas de Burnout e estresse), além de escutas focais e grupos de diálogo estruturados. Os resultados são consolidados em relatórios gerenciais sem expor a identidade individual."
+      },
+      {
+        "id": "f2",
+        "question": "O atendimento de Psicoterapia Breve Corporativa quebra o sigilo profissional?",
+        "answer": "Não. Todos os nossos psicólogos atuam rigorosamente de acordo com as normas éticas do Conselho Federal de Psicologia. Nenhuma informação clínica pessoal do colaborador é compartilhada com o RH ou diretores."
+      },
+      {
+        "id": "f3",
+        "question": "Qual o formato das palestras e treinamentos em saúde mental?",
+        "answer": "Oferecemos treinamentos de forma presencial ou remota. Nossos módulos são dinâmicos e adaptáveis à realidade da sua empresa, mesclando fundamentação teórica robusta com dinâmicas de acolhimento e escuta ativa."
+      },
+      {
+        "id": "f4",
+        "question": "A consultoria auxilia na adequação a novas leis e ESG?",
+        "answer": "Sim. Desenvolvemos diretrizes corporativas em conformidade com as exigências ESG (Governança Social e Ambiental) e leis trabalhistas de prevenção e suporte ao assédio e proteção à saúde física e mental."
+      }
+    ]
+  },
+  "contact": {
+    "visible": true,
+    "title": "Fale com um Especialista",
+    "subtitle": "Dê o primeiro passo para transformar a qualidade de vida e a cultura de saúde mental em sua empresa.",
+    "address": "Av. Paulista, 1000 - Bela Vista, São Paulo - SP",
+    "phone": "+55 (11) 98765-4321",
+    "email": "contato@ehconsultoria.com.br",
+    "mapIframeUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3657.1975770075594!2d-46.65239088502223!3d-23.56495398468087!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce59c8da0aa315%3A0xd59f9431797dcae7!2sAv.%20Paulista%2C%201000%20-%20Bela%20Vista%2C%20S%C3%A3o%20Paulo%20-%20SP%2C%2001310-100!5e0!3m2!1spt-BR!2sbr!4v1680000000000!5m2!1spt-BR!2sbr",
+    "emailConfig": {
+      "ccEmailPrimary": "erica.ehconsultltda@gmail.com",
+      "ccEmailCorporate": "contato@ehconsultoria.com.br"
+    }
+  },
+  "theme": {
+    "activePalette": "turquoise-corp",
+    "activeFontPair": "outfit-inter"
+  }
+}
