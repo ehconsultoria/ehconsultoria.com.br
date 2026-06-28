@@ -1,7 +1,7 @@
 {
   "header": {
     "logoVisible": true,
-    "ctaText": "Fale com um Especialista!",
+    "ctaText": "Fale com o Especialista",
     "ctaLink": {
       "type": "internal",
       "value": "#contato"
