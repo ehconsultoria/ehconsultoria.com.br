@@ -1,17 +1,37 @@
 {
   "header": {
     "logoVisible": true,
-    "ctaText": "Fale com um Especialista",
+    "ctaText": "Fale com um Especialista!",
     "ctaLink": {
       "type": "internal",
       "value": "#contato"
     },
     "menuItems": [
-      { "id": "m1", "label": "Soluções", "anchor": "#solucoes" },
-      { "id": "m2", "label": "Diferenciais", "anchor": "#diferenciais" },
-      { "id": "m3", "label": "Sobre Nós", "anchor": "#sobre" },
-      { "id": "m4", "label": "Blog & Mídia", "anchor": "#blog" },
-      { "id": "m5", "label": "FAQ", "anchor": "#faq" }
+      {
+        "id": "m1",
+        "label": "Soluções",
+        "anchor": "#solucoes"
+      },
+      {
+        "id": "m2",
+        "label": "Diferenciais",
+        "anchor": "#diferenciais"
+      },
+      {
+        "id": "m3",
+        "label": "Sobre Nós",
+        "anchor": "#sobre"
+      },
+      {
+        "id": "m4",
+        "label": "Blog & Mídia",
+        "anchor": "#blog"
+      },
+      {
+        "id": "m5",
+        "label": "FAQ",
+        "anchor": "#faq"
+      }
     ]
   },
   "hero": {
@@ -36,7 +56,10 @@
         "description": "Capacitação para líderes e colaboradores focada em comunicação não-violenta, inteligência emocional e manejo de estresse.",
         "imageUrl": "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=800",
         "ctaText": "Saber Mais",
-        "ctaLink": { "type": "internal", "value": "#contato" }
+        "ctaLink": {
+          "type": "internal",
+          "value": "#contato"
+        }
       },
       {
         "id": "s2",
@@ -44,7 +67,10 @@
         "description": "Atendimento clínico preventivo e focalizado para colaboradores que necessitam de suporte emocional estratégico no dia a dia.",
         "imageUrl": "https://images.unsplash.com/photo-1527689368864-3a821dbccc34?auto=format&fit=crop&q=80&w=800",
         "ctaText": "Saber Mais",
-        "ctaLink": { "type": "internal", "value": "#contato" }
+        "ctaLink": {
+          "type": "internal",
+          "value": "#contato"
+        }
       },
       {
         "id": "s3",
@@ -52,7 +78,10 @@
         "description": "Análise aprofundada dos níveis de estresse, burnout e engajamento da equipe, gerando relatórios de risco psicossocial.",
         "imageUrl": "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&q=80&w=800",
         "ctaText": "Saber Mais",
-        "ctaLink": { "type": "internal", "value": "#contato" }
+        "ctaLink": {
+          "type": "internal",
+          "value": "#contato"
+        }
       },
       {
         "id": "s4",
@@ -60,7 +89,10 @@
         "description": "Assessoria para o time de RH desenhar e implementar políticas robustas de bem-estar corporativo alinhadas às diretrizes ESG.",
         "imageUrl": "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=800",
         "ctaText": "Saber Mais",
-        "ctaLink": { "type": "internal", "value": "#contato" }
+        "ctaLink": {
+          "type": "internal",
+          "value": "#contato"
+        }
       }
     ]
   },
@@ -100,17 +132,57 @@
     "title": "Nossos Resultados",
     "subtitle": "Indicadores que consolidam o impacto e a confiança depositada por grandes corporações no nosso trabalho.",
     "stats": [
-      { "id": "st1", "number": 15000, "suffix": "+", "label": "Vidas Impactadas" },
-      { "id": "st2", "number": 50, "suffix": "+", "label": "Empresas Parceiras" },
-      { "id": "st3", "number": 300, "suffix": "+", "label": "Treinamentos Realizados" },
-      { "id": "st4", "number": 98, "suffix": "%", "label": "Índice de Satisfação" }
+      {
+        "id": "st1",
+        "number": 15000,
+        "suffix": "+",
+        "label": "Vidas Impactadas"
+      },
+      {
+        "id": "st2",
+        "number": 50,
+        "suffix": "+",
+        "label": "Empresas Parceiras"
+      },
+      {
+        "id": "st3",
+        "number": 300,
+        "suffix": "+",
+        "label": "Treinamentos Realizados"
+      },
+      {
+        "id": "st4",
+        "number": 98,
+        "suffix": "%",
+        "label": "Índice de Satisfação"
+      }
     ],
     "partners": [
-      { "id": "pt1", "name": "SulAmérica", "logoText": "SULAMÉRICA" },
-      { "id": "pt2", "name": "Bradesco Saúde", "logoText": "BRADESCO" },
-      { "id": "pt3", "name": "Petrobras", "logoText": "PETROBRAS" },
-      { "id": "pt4", "name": "Votorantim", "logoText": "VOTORANTIM" },
-      { "id": "pt5", "name": "Natura", "logoText": "NATURA" }
+      {
+        "id": "pt1",
+        "name": "SulAmérica",
+        "logoText": "SULAMÉRICA"
+      },
+      {
+        "id": "pt2",
+        "name": "Bradesco Saúde",
+        "logoText": "BRADESCO"
+      },
+      {
+        "id": "pt3",
+        "name": "Petrobras",
+        "logoText": "PETROBRAS"
+      },
+      {
+        "id": "pt4",
+        "name": "Votorantim",
+        "logoText": "VOTORANTIM"
+      },
+      {
+        "id": "pt5",
+        "name": "Natura",
+        "logoText": "NATURA"
+      }
     ]
   },
   "about": {
