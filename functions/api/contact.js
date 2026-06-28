@@ -15,15 +15,43 @@ export async function onRequestPost(context) {
       );
     }
 
-    // Recipients configurations (Editable corporate CC + Erica's private CC)
+    // CC recipients configurations
     const ccEmailPrimary = 'erica.ehconsultltda@gmail.com';
     const ccEmailCorporate = emailConfig?.ccEmailCorporate || 'contato@ehconsultoria.com.br';
 
-    // Retrieve Resend API Key from Cloudflare environment configuration variables
+    // 1. Log Lead data to Google Sheets (if environment variable GOOGLE_SHEETS_WEBAPP_URL is defined)
+    const sheetsUrl = env.GOOGLE_SHEETS_WEBAPP_URL;
+    if (sheetsUrl) {
+      try {
+        // Perform backend-to-backend POST to Google Apps Script Web App
+        const sheetsResponse = await fetch(sheetsUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            name,
+            email,
+            phone,
+            company,
+            message
+          })
+        });
+        if (!sheetsResponse.ok) {
+          console.error('Google Sheets API returned non-ok status:', sheetsResponse.status);
+        } else {
+          console.log('Logged lead data successfully to Google Sheets.');
+        }
+      } catch (err) {
+        console.error('Failed to log lead data to Google Sheets:', err);
+      }
+    }
+
+    // 2. Deliver transactional HTML email via Resend API
     const apiKey = env.RESEND_API_KEY;
     
     if (!apiKey) {
-      // In local dev/staging without env keys set, simulate email and return success
+      // In local dev/staging without env keys, simulate email and return success
       console.warn("RESEND_API_KEY is not defined. Email transmission simulated.");
       return new Response(
         JSON.stringify({ 
@@ -38,7 +66,6 @@ export async function onRequestPost(context) {
       );
     }
 
-    // Call Resend REST API endpoint to deliver transactional HTML email
     const resendResponse = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
