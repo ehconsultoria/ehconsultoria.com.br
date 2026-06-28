@@ -123,7 +123,7 @@ function CollapsibleSection({ title, isOpen, onToggle, children, isVisible, onTo
 }
 
 export default function AdminPanel({ onNavigate }) {
-  const { data, updateField, saveConfiguration, resetToDefault, gitConfig, updateGitConfig, palettes, fontPairs } = useCMS();
+  const { data, updateField, saveConfiguration, resetToDefault } = useCMS();
 
   // Authentication states
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
@@ -183,7 +183,7 @@ export default function AdminPanel({ onNavigate }) {
         error: null, 
         submitting: false 
       });
-      setTimeout(() => setSaveStatus(prev => ({ ...prev, success: false })), 5000);
+      setTimeout(() => setSaveStatus(prev => ({ ...prev, success: false })), 6000);
     } catch (err) {
       setSaveStatus({ 
         success: false, 
@@ -366,18 +366,6 @@ export default function AdminPanel({ onNavigate }) {
           </button>
 
           <button
-            onClick={() => setActiveTab('github')}
-            className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold rounded-xl transition-all ${
-              activeTab === 'github'
-                ? 'bg-cyan-50 text-[var(--color-primary)]'
-                : 'text-zinc-600 hover:bg-slate-50'
-            }`}
-          >
-            <Github className="w-4 h-4" />
-            Integração GitHub
-          </button>
-
-          <button
             onClick={() => setActiveTab('settings')}
             className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold rounded-xl transition-all ${
               activeTab === 'settings'
@@ -386,7 +374,7 @@ export default function AdminPanel({ onNavigate }) {
             }`}
           >
             <Settings className="w-4 h-4" />
-            E-mails & Geral
+            Configurações Gerais
           </button>
         </aside>
 
@@ -396,20 +384,29 @@ export default function AdminPanel({ onNavigate }) {
             <div className="mb-6 p-4 rounded-xl bg-green-50 border border-green-200 text-green-800 flex flex-col gap-1.5 animate-slide-up text-sm font-medium">
               <div className="flex items-center gap-2">
                 <Check className="w-4 h-4 text-green-600 flex-shrink-0" />
-                Alterações salvas localmente com sucesso!
+                Alterações salvas e aplicadas com sucesso!
               </div>
-              {gitConfig.token && saveStatus.gitSuccess && (
+              {saveStatus.gitSuccess ? (
                 <div className="text-xs text-green-700 pl-6 font-semibold">
-                  🚀 Alterações enviadas para o seu repositório GitHub! A Cloudflare foi notificada e o site está sendo atualizado agora.
+                  🚀 Sincronizado com o GitHub via variáveis da Cloudflare! Deploy em andamento para atualizar o site no ar.
+                </div>
+              ) : (
+                <div className="text-xs text-amber-700 pl-6 font-medium">
+                  Nota: Sincronização com o GitHub ignorada (modo de desenvolvimento local) ou GITHUB_TOKEN ausente.
                 </div>
               )}
             </div>
           )}
 
           {saveStatus.error && (
-            <div className="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 text-red-800 flex items-center gap-2 animate-slide-up text-sm font-medium">
-              <AlertTriangle className="w-4 h-4 text-red-600 flex-shrink-0" />
-              {saveStatus.error}
+            <div className="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 text-red-800 flex flex-col gap-1.5 animate-slide-up text-sm font-medium">
+              <div className="flex items-center gap-2">
+                <AlertTriangle className="w-4 h-4 text-red-600 flex-shrink-0" />
+                Falha no salvamento
+              </div>
+              <div className="text-xs text-red-700 pl-6">
+                {saveStatus.error}
+              </div>
             </div>
           )}
 
@@ -1279,107 +1276,12 @@ export default function AdminPanel({ onNavigate }) {
             </div>
           )}
 
-          {/* TAB 3: GitHub automation settings */}
-          {activeTab === 'github' && (
-            <div className="space-y-6 animate-fade-in">
-              <div className="border-b border-slate-200 pb-4">
-                <h3 className="text-xl font-extrabold text-zinc-900 font-heading">Integração GitHub & Auto-Deploy</h3>
-                <p className="text-xs text-zinc-400 mt-1">Conecte o CMS diretamente à sua conta do GitHub para automatizar os deploys na Cloudflare Pages.</p>
-              </div>
-
-              <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
-                <div className="flex items-start gap-4 p-4 rounded-xl bg-cyan-50/40 border border-cyan-100 text-sm text-zinc-700 leading-relaxed">
-                  <Github className="w-6 h-6 text-[var(--color-primary)] flex-shrink-0 mt-0.5" />
-                  <div className="space-y-1">
-                    <h4 className="font-bold text-zinc-900">Como funciona o deploy automatizado?</h4>
-                    <p className="text-xs text-zinc-600">
-                      Ao preencher as credenciais clássicas abaixo, toda vez que você clicar no botão **Salvar Alterações** no topo da página, o CMS fará o commit do novo conteúdo diretamente na branch do seu repositório. O GitHub avisa a Cloudflare e ela atualiza seu site no ar de forma instantânea!
-                    </p>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="space-y-1">
-                    <div className="flex items-center justify-between">
-                      <label className="text-xs font-bold text-zinc-500 uppercase tracking-wide">Token de Acesso Pessoal Clássico (PAT)</label>
-                      <a 
-                        href="https://github.com/settings/tokens" 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="text-[10px] font-bold text-[var(--color-primary)] hover:underline flex items-center gap-0.5"
-                      >
-                        <HelpCircle className="w-3 h-3" /> Criar Token no GitHub
-                      </a>
-                    </div>
-                    <input
-                      type="password"
-                      value={gitConfig.token}
-                      onChange={(e) => updateGitConfig({ ...gitConfig, token: e.target.value })}
-                      placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-                      className="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm font-mono focus:border-[var(--color-primary)] outline-none"
-                    />
-                    <span className="block text-[10px] text-zinc-400">O Token clássico do GitHub precisa ter a permissão <strong>repo</strong> selecionada durante a criação no site do GitHub.</span>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div className="space-y-1">
-                      <label className="text-xs font-bold text-zinc-500 uppercase tracking-wide">Proprietário (User/Org)</label>
-                      <input
-                        type="text"
-                        value={gitConfig.owner}
-                        onChange={(e) => updateGitConfig({ ...gitConfig, owner: e.target.value })}
-                        placeholder="ehconsultoria"
-                        className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm"
-                      />
-                    </div>
-                    
-                    <div className="space-y-1">
-                      <label className="text-xs font-bold text-zinc-500 uppercase tracking-wide">Repositório (Repo Name)</label>
-                      <input
-                        type="text"
-                        value={gitConfig.repo}
-                        onChange={(e) => updateGitConfig({ ...gitConfig, repo: e.target.value })}
-                        placeholder="ehconsultoria.com.br"
-                        className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm"
-                      />
-                    </div>
-
-                    <div className="space-y-1">
-                      <label className="text-xs font-bold text-zinc-500 uppercase tracking-wide">Branch Principal</label>
-                      <input
-                        type="text"
-                        value={gitConfig.branch}
-                        onChange={(e) => updateGitConfig({ ...gitConfig, branch: e.target.value })}
-                        placeholder="main"
-                        className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-zinc-500">
-                  <div className="flex items-center gap-1 text-amber-600 font-semibold">
-                    <AlertTriangle className="w-4 h-4 flex-shrink-0" />
-                    <span>O token clássico do GitHub é guardado apenas no seu navegador.</span>
-                  </div>
-                  {gitConfig.token ? (
-                    <span className="text-green-600 font-bold flex items-center gap-1">
-                      <Check className="w-4 h-4" /> Integração Ativada
-                    </span>
-                  ) : (
-                    <span className="text-zinc-400">Integração Inativa</span>
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* TAB 4: General system settings / Email CC configuration */}
+          {/* TAB 3: General system settings / Email CC configuration */}
           {activeTab === 'settings' && (
             <div className="space-y-6 animate-fade-in">
               <div className="border-b border-slate-200 pb-4">
-                <h3 className="text-xl font-extrabold text-zinc-900 font-heading">E-mails & Configurações de Leads</h3>
-                <p className="text-xs text-zinc-400 mt-1">Configure as chaves e destinatários de e-mails disparados pelo formulário comercial.</p>
+                <h3 className="text-xl font-extrabold text-zinc-900 font-heading">Configurações Gerais & E-mails</h3>
+                <p className="text-xs text-zinc-400 mt-1">Configure chaves de envio, destinatários e veja instruções de auto-deploy.</p>
               </div>
 
               {/* Email config */}
@@ -1415,17 +1317,29 @@ export default function AdminPanel({ onNavigate }) {
                 </div>
               </div>
 
-              {/* Security info */}
-              <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
-                <h4 className="font-heading font-bold text-md text-zinc-900">Status do Envio de E-mails</h4>
-                <div className="p-4 rounded-xl bg-slate-50 border border-slate-100 flex items-start gap-3 text-xs text-zinc-600 leading-relaxed">
-                  <HelpCircle className="w-5 h-5 text-zinc-400 flex-shrink-0" />
-                  <div>
-                    <h5 className="font-bold text-zinc-800">Chave de Envio do Resend</h5>
-                    <p className="mt-1">
-                      O disparo real de e-mails em produção depende da variável **`RESEND_API_KEY`** estar configurada no painel da sua **Cloudflare Pages** (como indicado no passo anterior). O CMS lê os destinatários daqui e repassa à rota da Cloudflare de forma segura.
-                    </p>
+              {/* Cloudflare Pages Settings Instruction Block */}
+              <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                <h4 className="font-heading font-bold text-md text-zinc-950 flex items-center gap-2">
+                  <Github className="w-5 h-5 text-zinc-700" />
+                  Como Configurar o Auto-Deploy Seguro
+                </h4>
+                
+                <p className="text-xs text-zinc-500 leading-relaxed">
+                  Para que o botão de salvar funcione em produção e envie as atualizações de texto diretamente para o GitHub (ativando o deploy automático da Cloudflare), você precisa cadastrar as credenciais como **Variáveis de Ambiente** seguras no painel da sua Cloudflare Pages.
+                </p>
+
+                <div className="p-4 bg-slate-50 border border-slate-100 rounded-xl space-y-3">
+                  <span className="block text-xs font-bold text-zinc-700">Variáveis a Adicionar na Cloudflare Pages:</span>
+                  <div className="space-y-2 text-xs font-mono text-zinc-600 bg-white p-3 rounded-lg border border-slate-100">
+                    <div><strong>GITHUB_TOKEN</strong> = <em>(Seu Token clássico do GitHub ghp_...)</em></div>
+                    <div><strong>GITHUB_OWNER</strong> = <code>ehconsultoria</code></div>
+                    <div><strong>GITHUB_REPO</strong> = <code>ehconsultoria.com.br</code></div>
+                    <div><strong>GITHUB_BRANCH</strong> = <code>main</code></div>
                   </div>
+                  
+                  <span className="block text-[10px] text-zinc-500 leading-relaxed">
+                    <strong>Passo a passo:</strong> No painel da Cloudflare &rarr; acesse seu projeto Pages &rarr; vá em <strong>Settings</strong> &rarr; <strong>Environment variables</strong> &rarr; clique em <strong>Add variables</strong> nas seções de Produção e Preview, insira os valores acima e clique em salvar. Não se esqueça de rodar um novo deploy após salvar as variáveis para ativá-las!
+                  </span>
                 </div>
               </div>
             </div>
