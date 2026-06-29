@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCMS } from '../context/CMSContext';
 import { 
   LogOut, Save, Download, RotateCcw, ArrowLeft, 
   Layout, Palette, Image as ImageIcon, Settings, 
   Trash2, Plus, Check, AlertTriangle, Eye, EyeOff,
-  Github, HelpCircle, ChevronDown, ChevronUp
+  Github, HelpCircle, ChevronDown, ChevronUp, Copy,
+  UploadCloud, Loader
 } from 'lucide-react';
 
 // Help component for link target configuration
@@ -118,6 +119,299 @@ function CollapsibleSection({ title, isOpen, onToggle, children, isVisible, onTo
           {children}
         </div>
       )}
+    </div>
+  );
+}
+
+// Media Manager Tab Component
+function MediaManager() {
+  const [mediaList, setMediaList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState('');
+  const [copiedIndex, setCopiedIndex] = useState(null);
+
+  const fetchMedia = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const response = await fetch('/api/media');
+      if (response.ok) {
+        const data = await response.json();
+        setMediaList(data);
+      } else {
+        throw new Error('Falha ao obter lista de mídias.');
+      }
+    } catch (err) {
+      setError('Não foi possível carregar as imagens do GitHub. Certifique-se de que a variável GITHUB_TOKEN esteja configurada na Cloudflare.');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchMedia();
+  }, []);
+
+  // HTML5 Canvas compression and WebP conversion
+  const compressImage = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target.result;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          
+          // Max boundaries to prevent repository bloat (max 1600px width/height)
+          const MAX_WIDTH = 1600;
+          const MAX_HEIGHT = 1600;
+          
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+          
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          
+          // Convert to WebP base64 format with 80% quality
+          const dataUrl = canvas.toDataURL('image/webp', 0.8);
+          const base64Content = dataUrl.split(',')[1];
+          resolve({ base64Content, size: Math.round((base64Content.length * 3) / 4) });
+        };
+        img.onerror = (err) => reject(err);
+      };
+      reader.onerror = (err) => reject(err);
+    });
+  };
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setUploading(true);
+    setError('');
+
+    try {
+      // 1. Process image to compressed WebP in the browser
+      const { base64Content } = await compressImage(file);
+      
+      // Build safe WebP filename (slugify + timestamp)
+      const cleanName = file.name
+        .split('.')[0]
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, '-')
+        .replace(/-+/g, '-');
+      const filename = `${cleanName}-${Date.now()}.webp`;
+
+      // 2. Upload to Cloudflare backend function
+      const response = await fetch('/api/media', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ filename, content: base64Content })
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // Refresh list
+        await fetchMedia();
+      } else {
+        throw new Error(result.error || 'Falha ao gravar arquivo no GitHub.');
+      }
+
+    } catch (err) {
+      setError(err.message || 'Erro durante o upload e compressão da imagem.');
+      console.error(err);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleDelete = async (filename, sha) => {
+    if (!window.confirm(`Deseja realmente deletar a imagem "${filename}"? Esta ação removerá o arquivo do GitHub de forma permanente.`)) {
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+
+    try {
+      const response = await fetch('/api/media', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ filename, sha })
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // Refresh list
+        await fetchMedia();
+      } else {
+        throw new Error(result.error || 'Falha ao deletar arquivo.');
+      }
+
+    } catch (err) {
+      setError(err.message || 'Erro ao deletar imagem.');
+      console.error(err);
+      setLoading(false);
+    }
+  };
+
+  const handleCopyUrl = (url, index) => {
+    navigator.clipboard.writeText(url);
+    setCopiedIndex(index);
+    setTimeout(() => setCopiedIndex(null), 2000);
+  };
+
+  const formatSize = (bytes) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const dm = 1;
+    const sizes = ['Bytes', 'KB', 'MB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+  };
+
+  return (
+    <div className="space-y-6 animate-fade-in">
+      <div className="border-b border-slate-200 pb-4">
+        <h3 className="text-xl font-extrabold text-zinc-900 font-heading">Gerenciador de Mídia</h3>
+        <p className="text-xs text-zinc-400 mt-1">Faça upload de imagens que serão comprimidas e convertidas para WebP automaticamente, hospedadas diretamente no seu repositório.</p>
+      </div>
+
+      {error && (
+        <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-800 flex items-center gap-2 text-sm font-medium">
+          <AlertTriangle className="w-4 h-4 text-red-600 flex-shrink-0" />
+          {error}
+        </div>
+      )}
+
+      {/* Upload Zone */}
+      <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col items-center justify-center border-dashed border-2 hover:border-[var(--color-primary)] transition-colors relative">
+        <input
+          type="file"
+          id="media-uploader"
+          accept="image/*"
+          onChange={handleFileUpload}
+          disabled={uploading}
+          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
+        />
+        
+        <div className="text-center space-y-3">
+          {uploading ? (
+            <div className="flex flex-col items-center gap-2 text-[var(--color-primary)] font-semibold text-sm">
+              <Loader className="w-8 h-8 animate-spin" />
+              <span>Processando, comprimindo e enviando para o GitHub...</span>
+            </div>
+          ) : (
+            <>
+              <UploadCloud className="w-10 h-10 text-zinc-400 mx-auto" />
+              <div className="text-sm font-semibold text-zinc-700">Arraste ou clique para carregar uma imagem</div>
+              <div className="text-xs text-zinc-400">JPG, PNG ou SVG. Conversão e compressão WebP em tempo real (Máx. 1600px).</div>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* Gallery Grid */}
+      <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+        <h4 className="font-heading font-bold text-md text-zinc-950 mb-4 flex items-center justify-between">
+          Imagens Hospedadas
+          <button 
+            type="button" 
+            onClick={fetchMedia} 
+            className="text-xs text-[var(--color-primary)] hover:underline"
+          >
+            Atualizar Lista
+          </button>
+        </h4>
+
+        {loading ? (
+          <div className="py-12 text-center text-zinc-400 text-sm flex flex-col items-center gap-2">
+            <Loader className="w-6 h-6 animate-spin text-[var(--color-primary)]" />
+            <span>Consultando imagens no GitHub...</span>
+          </div>
+        ) : mediaList.length === 0 ? (
+          <div className="py-12 text-center text-zinc-400 text-sm">
+            Nenhuma imagem hospedada ainda na pasta `public/uploads/`.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {mediaList.map((media, index) => (
+              <div key={media.sha} className="border border-slate-100 rounded-xl overflow-hidden shadow-sm flex flex-col bg-slate-50/30">
+                {/* Visual Thumbnail */}
+                <div className="aspect-[4/3] relative overflow-hidden bg-slate-200 border-b border-slate-100">
+                  <img
+                    src={media.downloadUrl}
+                    alt={media.name}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                  <span className="absolute bottom-2 right-2 bg-black/60 text-[10px] font-bold text-white px-2 py-0.5 rounded">
+                    {formatSize(media.size)}
+                  </span>
+                </div>
+                
+                {/* Details Footer */}
+                <div className="p-3 flex flex-col justify-between flex-grow gap-3">
+                  <span className="block text-xs font-bold text-zinc-700 truncate" title={media.name}>
+                    {media.name}
+                  </span>
+                  
+                  <div className="flex gap-2 text-xs">
+                    <button
+                      type="button"
+                      onClick={() => handleCopyUrl(media.url, index)}
+                      className="flex-grow inline-flex items-center justify-center gap-1 py-1.5 px-3 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 font-semibold text-zinc-700 active:scale-95 transition-all"
+                    >
+                      {copiedIndex === index ? (
+                        <>
+                          <Check className="w-3.5 h-3.5 text-green-600" />
+                          <span>Copiado!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="w-3.5 h-3.5 text-zinc-400" />
+                          <span>Copiar URL</span>
+                        </>
+                      )}
+                    </button>
+                    
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(media.name, media.sha)}
+                      className="p-1.5 rounded-lg border border-red-100 text-red-500 hover:bg-red-50 hover:border-red-200 transition-colors"
+                      title="Deletar imagem do repositório"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -324,7 +618,7 @@ export default function AdminPanel({ onNavigate }) {
             onClick={() => onNavigate('landing')}
             className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-zinc-600 bg-white border border-slate-200 hover:bg-slate-50 rounded-lg transition-all"
           >
-            <Eye className="w-4 h-4" />
+            <Eye className="w-4.5 h-4.5" />
             Ver Site
           </button>
 
@@ -333,7 +627,7 @@ export default function AdminPanel({ onNavigate }) {
             className="p-2 text-zinc-400 hover:text-zinc-700 hover:bg-slate-100 rounded-lg transition-all"
             title="Sair"
           >
-            <LogOut className="w-4 h-4" />
+            <LogOut className="w-4.5 h-4.5" />
           </button>
         </div>
       </header>
@@ -361,8 +655,20 @@ export default function AdminPanel({ onNavigate }) {
                 : 'text-zinc-600 hover:bg-slate-50'
             }`}
           >
-            <Palette className="w-4 h-4" />
+            <Palette className="w-4.5 h-4.5" />
             Tema & Tipografia
+          </button>
+
+          <button
+            onClick={() => setActiveTab('media')}
+            className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold rounded-xl transition-all ${
+              activeTab === 'media'
+                ? 'bg-cyan-50 text-[var(--color-primary)]'
+                : 'text-zinc-600 hover:bg-slate-50'
+            }`}
+          >
+            <ImageIcon className="w-4.5 h-4.5" />
+            Gerenciador de Mídia
           </button>
 
           <button
@@ -373,7 +679,7 @@ export default function AdminPanel({ onNavigate }) {
                 : 'text-zinc-600 hover:bg-slate-50'
             }`}
           >
-            <Settings className="w-4 h-4" />
+            <Settings className="w-4.5 h-4.5" />
             Configurações Gerais
           </button>
         </aside>
@@ -383,7 +689,7 @@ export default function AdminPanel({ onNavigate }) {
           {saveStatus.success && (
             <div className="mb-6 p-4 rounded-xl bg-green-50 border border-green-200 text-green-800 flex flex-col gap-1.5 animate-slide-up text-sm font-medium">
               <div className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-green-600 flex-shrink-0" />
+                <Check className="w-4.5 h-4.5 text-green-600 flex-shrink-0" />
                 Alterações salvas e aplicadas com sucesso!
               </div>
               {saveStatus.gitSuccess ? (
@@ -401,7 +707,7 @@ export default function AdminPanel({ onNavigate }) {
           {saveStatus.error && (
             <div className="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 text-red-800 flex flex-col gap-1.5 animate-slide-up text-sm font-medium">
               <div className="flex items-center gap-2">
-                <AlertTriangle className="w-4 h-4 text-red-600 flex-shrink-0" />
+                <AlertTriangle className="w-4.5 h-4.5 text-red-600 flex-shrink-0" />
                 Falha no salvamento
               </div>
               <div className="text-xs text-red-700 pl-6">
@@ -1276,7 +1582,10 @@ export default function AdminPanel({ onNavigate }) {
             </div>
           )}
 
-          {/* TAB 3: General system settings / Email CC configuration */}
+          {/* TAB 3: Media Manager */}
+          {activeTab === 'media' && <MediaManager />}
+
+          {/* TAB 4: General system settings / Email CC configuration */}
           {activeTab === 'settings' && (
             <div className="space-y-6 animate-fade-in">
               <div className="border-b border-slate-200 pb-4">
@@ -1335,6 +1644,7 @@ export default function AdminPanel({ onNavigate }) {
                     <div><strong>GITHUB_OWNER</strong> = <code>ehconsultoria</code></div>
                     <div><strong>GITHUB_REPO</strong> = <code>ehconsultoria.com.br</code></div>
                     <div><strong>GITHUB_BRANCH</strong> = <code>main</code></div>
+                    <div><strong>GOOGLE_SHEETS_WEBAPP_URL</strong> = <em>(URL de gravação gerada no Google Planilhas)</em></div>
                   </div>
                   
                   <span className="block text-[10px] text-zinc-500 leading-relaxed">
