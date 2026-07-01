@@ -63,8 +63,8 @@
       },
       {
         "id": "s2",
-        "title": "Psicoterapia Breve Corporativa",
-        "description": "Atendimento clínico preventivo e focalizado para colaboradores que necessitam de suporte emocional estratégico no dia a dia.",
+        "title": "Plantão Psicológico",
+        "description": "Acolhimento focalizado para colaboradores que necessitam de suporte emocional estratégico no dia a dia.",
         "imageUrl": "https://images.unsplash.com/photo-1527689368864-3a821dbccc34?auto=format&fit=crop&q=80&w=800",
         "ctaText": "Saber Mais",
         "ctaLink": {
@@ -74,7 +74,7 @@
       },
       {
         "id": "s3",
-        "title": "Diagnóstico de Clima Mental",
+        "title": "Diagnóstico de Cultura e Clima Organizacional",
         "description": "Análise aprofundada dos níveis de estresse, burnout e engajamento da equipe, gerando relatórios de risco psicossocial.",
         "imageUrl": "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&q=80&w=800",
         "ctaText": "Saber Mais",
@@ -160,28 +160,28 @@
     "partners": [
       {
         "id": "pt1",
-        "name": "SulAmérica",
-        "logoText": "SULAMÉRICA"
+        "name": "",
+        "logoText": ""
       },
       {
         "id": "pt2",
-        "name": "Bradesco Saúde",
-        "logoText": "BRADESCO"
+        "name": "",
+        "logoText": ""
       },
       {
         "id": "pt3",
-        "name": "Petrobras",
-        "logoText": "PETROBRAS"
+        "name": "",
+        "logoText": ""
       },
       {
         "id": "pt4",
-        "name": "Votorantim",
-        "logoText": "VOTORANTIM"
+        "name": "",
+        "logoText": ""
       },
       {
         "id": "pt5",
-        "name": "Natura",
-        "logoText": "NATURA"
+        "name": "",
+        "logoText": ""
       }
     ]
   },
